@@ -1,0 +1,91 @@
+bootstrap.servers={{ bootstrap_servers }}
+
+group.id=cc-connect-cluster
+
+key.converter=org.apache.kafka.connect.json.JsonConverter
+value.converter=org.apache.kafka.connect.json.JsonConverter
+key.converter.schemas.enable=false
+value.converter.schemas.enable=false
+
+internal.key.converter=org.apache.kafka.connect.json.JsonConverter
+internal.value.converter=org.apache.kafka.connect.json.JsonConverter
+internal.key.converter.schemas.enable=false
+internal.value.converter.schemas.enable=false
+
+# Connect clusters create three topics to manage offsets, configs, and status
+# information. Note that these contribute towards the total partition limit quota.
+offset.storage.topic=connect-offsets
+offset.storage.replication.factor=3
+offset.storage.partitions=3
+
+config.storage.topic=connect-configs
+config.storage.replication.factor=3
+
+status.storage.topic=connect-status
+status.storage.replication.factor=3
+
+offset.flush.interval.ms=10000
+
+plugin.path=/usr/share/java,/usr/share/confluent-hub-components
+
+#producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+#consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+
+connector.client.config.override.policy=All
+
+ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+request.timeout.ms=20000
+retry.backoff.ms=500
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username="{{ api_key }}"   password="{{ api_secret }}";
+security.protocol=SASL_SSL
+
+consumer.ssl.endpoint.identification.algorithm=https
+consumer.sasl.mechanism=PLAIN
+consumer.request.timeout.ms=20000
+consumer.retry.backoff.ms=500
+consumer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username="{{ api_key }}"   password="{{ api_secret }}";
+consumer.security.protocol=SASL_SSL
+
+producer.ssl.endpoint.identification.algorithm=https
+producer.sasl.mechanism=PLAIN
+producer.request.timeout.ms=20000
+producer.retry.backoff.ms=500
+producer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username="{{ api_key }}"   password="{{ api_secret }}";
+producer.security.protocol=SASL_SSL
+
+# Confluent Schema Registry for Kafka Connect
+#value.converter=io.confluent.connect.avro.AvroConverter
+#value.converter.basic.auth.credentials.source=USER_INFO
+#value.converter.schema.registry.basic.auth.user.info={{ sr_key }}:{{ sr_secret }}
+#value.converter.schema.registry.url={{ sr_url }}
+
+# If license key is required
+confluent.topic.bootstrap.servers={{ bootstrap_servers }}
+confluent.topic.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username="{{ api_key }}"   password="{{ api_secret }}";
+confluent.topic.security.protocol=SASL_SSL
+confluent.topic.sasl.mechanism=PLAIN
+
+# Reporter
+reporter.admin.bootstrap.servers={{ bootstrap_servers }}
+reporter.admin.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username="{{ api_key }}"   password="{{ api_secret }}H";
+reporter.admin.security.protocol=SASL_SSL
+reporter.admin.sasl.mechanism=PLAIN
+
+reporter.producer.bootstrap.servers={{ bootstrap_servers }}
+reporter.producer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username="{{ api_key }}"   password="{{ api_secret }}";
+reporter.producer.security.protocol=SASL_SSL
+reporter.producer.sasl.mechanism=PLAIN
+
+# Debezium
+database.history.kafka.bootstrap.servers={{ bootstrap_servers }}
+
+database.history.consumer.security.protocol=SASL_SSL
+database.history.consumer.ssl.endpoint.identification.algorithm=https
+database.history.consumer.sasl.mechanism=PLAIN
+database.history.consumer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username="{{ api_key }}"   password="{{ api_secret }}";
+
+database.history.producer.security.protocol=SASL_SSL
+database.history.producer.ssl.endpoint.identification.algorithm=https
+database.history.producer.sasl.mechanism=PLAIN
+database.history.producer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule   required username="{{ api_key }}"   password="{{ api_secret }}";
